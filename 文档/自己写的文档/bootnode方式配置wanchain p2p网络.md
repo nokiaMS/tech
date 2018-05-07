@@ -1,16 +1,22 @@
 # wanchain用bootnode方式建立p2p网络 #
 1. 在窗口1启动bootnode
+
 	`root@ubuntu:~/go/bft_v101_nodes/node4# /root/go/src/github.com/wanchain/go-wanchain/build/bin/bootnode -nodekey=prv.key`
 2. 启动窗口2
 	1. 初始化node
+	
 		`root@ubuntu:~/go/bft_v101_nodes/node1# /root/go/src/github.com/wanchain/go-wanchain/build/bin/gwan --datadir "./" --nodekey ./prv.key init ./genesis.json`
 	2. 启动node
+	
 		`root@ubuntu:~/go/bft_v101_nodes/node1# /root/go/src/github.com/wanchain/go-wanchain/build/bin/gwan --datadir "./" --nodekey ./prv.key --networkid 168 --port 40001 --bootnodes enode://caed6f01ac300c8a0834e53ee0afd5363977be178910bd2c7793985f38024a59665d9879dd7b03c2bffdfeb89979d0bb4a282de5d6f948870f4f337eeeb8254f@192.168.138.136:30301 console`
+
 		(在实际使用中发现,bootnode的地址必须写机器的外网地址,如果写127.0.0.1或者[::]都不能发现节点.)
 3. 在窗口3启动另外一个节点,按照步骤2进行配置.
 4. 两个节点启动完成之后,在console上执行命令,发现peer数为1.
 
-	` > net.peerCount` (结果为1.)
+	` > net.peerCount`
+
+	 (结果为1.)
 
 # 以static node方式配置p2p网络 #
 
