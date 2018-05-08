@@ -19,4 +19,6 @@ we3.js version 1.0 APIs: [https://web3js.readthedocs.io/en/1.0/index.html](https
     	batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000000', 'latest', callback));  
    		batch.add(web3.eth.Contract(abi).at(address).balance.request(address, callback2));
     	batch.execute();   //执行batch
-3. 
+3. 大数在node.js中总是以object的方式存在，在使用的时候需要转换成字符串。原因是js在表示大叔的时候会用指数的形式，而字符串形式会原样输出。另外，在js中浮点数的小数位最多是20位，再多就会被截断，使用的时候需要注意。
+4. API说明
+	1. web3.version
