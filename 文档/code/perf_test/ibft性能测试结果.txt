@@ -1,2 +1,56 @@
 出块速度:
 	60个块/分钟. (在ibft共识算法中有常量限制块之间的时间戳间隔最小为1秒)
+	在实际测试中从统计结果来看也可以达到75块/分钟.
+交易确认速度:
+	采用两台虚拟机,一台上有4个节点提供挖矿功能;另外一台上启动4个js脚本分别连接每个挖矿节点.
+	每个测试脚本中,每间隔5ms发送一个交易, 4个脚本连接不同node同时发送.
+	在某个节点上查看一分钟的出块数,然后获得每个块中的交易数量,这样就得出了一分钟里总的交易确认数量.
+	测试结果: 得出结果, 560个交易/分钟.
+
+
+	测试机:
+		CPU 4核均达到100%, 内存占用20%, 网络占用20K/s
+	挖矿机:
+		CPU 4核均为25%左右,内存50%, 网络35K/s
+	分析;
+		发送的交易远远大于被确认的交易,挖矿机器系统各资源均没有达到平静,因此考虑是代码逻辑达到了交易确认的瓶颈.
+		下一步应该分析如何修改代码相关配置来提升交易确认速率.
+		集中方法调优:
+			1. 修改共识配置参数及常量然后验证.
+			2. 在代码中加时间统计点,分析在出块逻辑中每个流程占用的时间,然后有针对性的优化.
+			3. 采用两个账户(两个测试端公用一个账户)发送交易与采用4个账户发送交易,得出的交易确认速率均值相同,均为560个交易/秒.
+                           因此,得出结论是在此拓扑场景中账户的个数对出块速率没有影响,4个账户已经足够了.
+			4. 后续可以考虑采用性能更高的硬件环境(但是从结果看各硬件配置均未达到瓶颈.)
+	
+
+root@ubuntu:~/test/web3test# ./perf_tranPerMin.js 
+Blocks per minute: 61
+    from: 4209 to: 4270 tranCnt: 326
+Blocks per minute: 68
+    from: 4270 to: 4338 tranCnt: 527
+Blocks per minute: 70
+    from: 4338 to: 4408 tranCnt: 580
+Blocks per minute: 70
+    from: 4408 to: 4478 tranCnt: 586
+Blocks per minute: 70
+    from: 4478 to: 4548 tranCnt: 569
+Blocks per minute: 69
+    from: 4548 to: 4617 tranCnt: 533
+Blocks per minute: 71
+    from: 4617 to: 4688 tranCnt: 586
+Blocks per minute: 70
+    from: 4688 to: 4758 tranCnt: 563
+Blocks per minute: 70
+    from: 4758 to: 4828 tranCnt: 557
+Blocks per minute: 70
+    from: 4828 to: 4898 tranCnt: 558
+Blocks per minute: 70
+    from: 4898 to: 4968 tranCnt: 558
+Blocks per minute: 71
+    from: 4968 to: 5039 tranCnt: 555
+Blocks per minute: 70
+    from: 5039 to: 5109 tranCnt: 573
+Blocks per minute: 70
+    from: 5109 to: 5179 tranCnt: 564
+Blocks per minute: 70
+    from: 5179 to: 5249 tranCnt: 563
